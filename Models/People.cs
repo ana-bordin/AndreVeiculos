@@ -11,7 +11,7 @@ namespace Models
         public string Document { get; set; } //mascara pk
         public string Name { get; set; }
         public DateOnly BirthDate { get; set; }
-        public Address Adress { get; set; }
+        public Address Address { get; set; }
         public string Telephone { get; set; }
         public string Email { get; set; }    
     }

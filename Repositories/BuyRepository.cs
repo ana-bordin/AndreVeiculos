@@ -1,16 +1,17 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Models;
+using System.Configuration;
 
 namespace Repositories
 {
-    public class BuyRepository
+    public class BuyRepository : IBuyRepository
     {
-        private readonly string _conn;
+        private string _conn { get; set;} 
 
-        public BuyRepository(string connectionString)
+        public BuyRepository()
         {
-            _conn = connectionString;
+            _conn = ConfigurationManager.ConnectionStrings["StringConnection"].ConnectionString;
         }
 
         public bool InsertAll(List<Buy> buys)
@@ -24,10 +25,7 @@ namespace Repositories
                     {
                         foreach (var buy in buys)
                         {
-                            var query = "INSERT INTO Buy (LicensePlate, Value, Date) VALUES (@LicensePlate, @Value, @Date)";
-                            var result = db.Execute(query, new { CarId = buy.Car.LicensePlate, Value = buy.Value, Date = buy.Date }, transaction);
-
-                            if (result == 0)
+                            if (!Insert(buy))
                             {
                                 transaction.Rollback();
                                 return false;

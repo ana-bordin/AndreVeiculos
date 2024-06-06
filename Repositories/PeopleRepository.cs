@@ -12,11 +12,11 @@ namespace Repositories
 {
     public class PeopleRepository
     {
-        private readonly string _conn;
+        private string _conn { get; set; }
 
-        public PeopleRepository(string connectionString)
+        public PeopleRepository()
         {
-            _conn = connectionString;
+            _conn = ConfigurationManager.ConnectionStrings["StringConnection"].ConnectionString;
         }
 
         public bool InsertAll(List<People> people)
@@ -35,14 +35,14 @@ namespace Repositories
                                                "SELECT CAST(SCOPE_IDENTITY() as int)";
                             var addressId = db.Query<int>(addressQuery, new
                             {
-                                TypeStreet = person.Adress.TypeStreet,
-                                Street = person.Adress.Street,
-                                ZipCode = person.Adress.ZipCode,
-                                Neighborhood = person.Adress.Neighborhood,
-                                City = person.Adress.City,
-                                State = person.Adress.State,
-                                Number = person.Adress.Number,
-                                Complement = person.Adress.Complement
+                                TypeStreet = person.Address.TypeStreet,
+                                Street = person.Address.Street,
+                                ZipCode = person.Address.ZipCode,
+                                Neighborhood = person.Address.Neighborhood,
+                                City = person.Address.City,
+                                State = person.Address.State,
+                                Number = person.Address.Number,
+                                Complement = person.Address.Complement
                             }, transaction).Single();
 
                             var peopleQuery = "INSERT INTO People (Document, Name, BirthDate, AddressId, Telephone, Email) VALUES (@Document, @Name, @BirthDate, @AddressId, @Telephone, @Email)";
@@ -83,19 +83,17 @@ namespace Repositories
                 {
                     db.Open();
 
-                    var addressQuery = "INSERT INTO Address (TypeStreet, Street, ZipCode, Neighborhood, City, State, Number, Complement) " +
-                                       "VALUES (@TypeStreet, @Street, @ZipCode, @Neighborhood, @City, @State, @Number, @Complement);" +
-                                       "SELECT CAST(SCOPE_IDENTITY() as int)";
+                    var addressQuery = "INSERT INTO Address (TypeStreet, Street, ZipCode, Neighborhood, City, State, Number, Complement)VALUES (@TypeStreet, @Street, @ZipCode, @Neighborhood, @City, @State, @Number, @Complement); SELECT CAST(SCOPE_IDENTITY() as int)";
                     var addressId = db.Query<int>(addressQuery, new
                     {
-                        TypeStreet = person.Adress.TypeStreet,
-                        Street = person.Adress.Street,
-                        ZipCode = person.Adress.ZipCode,
-                        Neighborhood = person.Adress.Neighborhood,
-                        City = person.Adress.City,
-                        State = person.Adress.State,
-                        Number = person.Adress.Number,
-                        Complement = person.Adress.Complement
+                        TypeStreet = person.Address.TypeStreet,
+                        Street = person.Address.Street,
+                        ZipCode = person.Address.ZipCode,
+                        Neighborhood = person.Address.Neighborhood,
+                        City = person.Address.City,
+                        State = person.Address.State,
+                        Number = person.Address.Number,
+                        Complement = person.Address.Complement
                     }).Single();
 
                     var peopleQuery = "INSERT INTO People (Document, Name, BirthDate, AddressId, Telephone, Email) VALUES (@Document, @Name, @BirthDate, @AddressId, @Telephone, @Email)";
@@ -127,9 +125,10 @@ namespace Repositories
                 var query = "SELECT p.*, a.* FROM People p JOIN Address a ON p.AddressId = a.Id";
                 return db.Query<People, Address, People>(query, (person, address) =>
                 {
-                    person.Adress = address;
+                    person.Address = address;
                     return person;
                 }).ToList();
             }
         }
     }
+}

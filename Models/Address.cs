@@ -15,7 +15,7 @@ namespace Models
         public string Neighborhood { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public string Number { get; set; }
+        public int Number { get; set; }
         public string Complement { get; set; }
        
         public override string ToString()
