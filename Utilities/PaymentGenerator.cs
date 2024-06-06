@@ -10,14 +10,25 @@ namespace Utilities
     public class PaymentGenerator
     {
         static Random random = new Random();
-        public static Payment PaymentGenerate()
+        public static Payment PaymentGenerate(string type)
         {
+            CreditCard creditCard = null;
+            Pix pix = null;
+            BankPaymentSlip bankPaymentSlip = null;
+
+            if (type == "BankPaymentSlip")
+                bankPaymentSlip = BankPaymentSlipGenerate();
+            else if (type == "Pix")
+                pix = PixGenerate();
+            else
+                creditCard = CreditCardGenerate();
+
             return new Payment()
             {
-                PaymentDate = DateTime.Now,
-                PaymentValue = 1000,
-                PaymentType = "CreditCard",
-                CreditCard = CreditCardGenerate()
+                CreditCard = CreditCardGenerate(),
+                BankPaymentSlip = bankPaymentSlip,
+                Pix = pix,
+                PaymentDate = DateOnly.FromDateTime(DateTime.Now)
             };
         }
         public static CreditCard CreditCardGenerate()
@@ -30,8 +41,8 @@ namespace Utilities
             return new CreditCard()
             {
                 CardNumber = cardNumber,
-                CardName = "John Doe", 
-                SecurityCode = "123", 
+                CardName = "John Doe",
+                SecurityCode = "123",
                 ExpirationDate = DateOnly.Parse("01-12-2025")
             };
         }

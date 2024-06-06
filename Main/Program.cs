@@ -49,6 +49,8 @@ namespace Main
         static List<Pix> pixs = new List<Pix>();
         static List<BankPaymentSlip> bankPaymentSlips = new List<BankPaymentSlip>();
 
+        static List<Payment> payments = new List<Payment>();
+        static List<Sale> sales = new List<Sale>();
 
         static void CreateListCar()
         {
@@ -125,6 +127,7 @@ namespace Main
             }
         }
 
+        
         static void Main(string[] args)
         {
             Console.WriteLine("Gerar carros:");
@@ -208,6 +211,19 @@ namespace Main
             bankPaymentSlips.Clear();
             bankPaymentSlips = bankPaymentSlipRepository.GetAll();
             Console.ReadKey();
+            
+            Console.WriteLine("Gerar Venda");
+            Sale sale = SaleGenerator.GenerateSale(cars,clients, employees);
+            sales.Add(sale);
+            SaleRepository saleRepository = new SaleRepository();
+            saleRepository.InsertAll(sales);
+            sales.Clear();
+
+           
+
+            //payment 
+            //sales
+
 
 
 

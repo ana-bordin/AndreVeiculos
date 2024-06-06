@@ -1,13 +1,17 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Models;
+using System.Configuration;
 
 namespace Repositories
 {
     public class SaleRepository
     {
-        private readonly string _conn;
-
+        private string _conn { get; set; }
+        public SaleRepository()
+        {
+            _conn = ConfigurationManager.ConnectionStrings["StringConnection"].ConnectionString;
+        }
         public SaleRepository(string connectionString)
         {
             _conn = connectionString;
