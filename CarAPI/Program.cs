@@ -1,3 +1,5 @@
+﻿using CarAPI.Data;
+using Microsoft.EntityFrameworkCore;
 namespace CarAPI
 {
     public class Program
@@ -5,6 +7,8 @@ namespace CarAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<CarAPIContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("CarAPIContext") ?? throw new InvalidOperationException("Connection string 'CarAPIContext' not found.")));
 
             // Add services to the container.
 

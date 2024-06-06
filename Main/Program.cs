@@ -1,12 +1,5 @@
-﻿using Microsoft.Identity.Client;
-using Models;
+﻿using Models;
 using Repositories;
-using System;
-using System.IO;
-using System.Net;
-using System.Reflection.Emit;
-using System.Reflection.PortableExecutable;
-using System.Transactions;
 using Utilities;
 
 namespace Main
@@ -127,7 +120,7 @@ namespace Main
             }
         }
 
-        
+
         static void Main(string[] args)
         {
             Console.WriteLine("Gerar carros:");
@@ -211,15 +204,15 @@ namespace Main
             bankPaymentSlips.Clear();
             bankPaymentSlips = bankPaymentSlipRepository.GetAll();
             Console.ReadKey();
-            
+
             Console.WriteLine("Gerar Venda");
-            Sale sale = SaleGenerator.GenerateSale(cars,clients, employees);
+            Sale sale = SaleGenerator.GenerateSale(cars, clients, employees);
             sales.Add(sale);
             SaleRepository saleRepository = new SaleRepository();
             saleRepository.InsertAll(sales);
             sales.Clear();
 
-           
+
 
             //payment 
             //sales

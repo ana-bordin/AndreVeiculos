@@ -1,11 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Utilities
+﻿namespace Utilities
 {
     public class PeopleGenerator
     {
@@ -41,7 +34,7 @@ namespace Utilities
             {
                 if (i == 2 || i == 5)
                 {
-                    birth+= "/";
+                    birth += "/";
                 }
                 birth += random.Next(10);
             }

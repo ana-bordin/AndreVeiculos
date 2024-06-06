@@ -47,7 +47,7 @@ namespace Repositories
         }
 
         public bool Insert(BankPaymentSlip bankPaymentSlip)
-        {        
+        {
             using (var db = new SqlConnection(_conn))
             {
                 try
@@ -65,7 +65,7 @@ namespace Repositories
         }
 
         public List<BankPaymentSlip> GetAll()
-        {       
+        {
             using (var db = new SqlConnection(_conn))
             {
                 db.Open();

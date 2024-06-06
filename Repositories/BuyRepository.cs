@@ -7,7 +7,7 @@ namespace Repositories
 {
     public class BuyRepository : IBuyRepository
     {
-        private string _conn { get; set;} 
+        private string _conn { get; set; }
 
         public BuyRepository()
         {

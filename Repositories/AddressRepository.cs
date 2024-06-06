@@ -15,9 +15,9 @@ namespace Repositories
         }
         public bool InsertAll(List<Address> addresses)
         {
-            using (var db = new SqlConnection(_conn)) 
-            { 
-                db.Open();              
+            using (var db = new SqlConnection(_conn))
+            {
+                db.Open();
                 using (var transaction = db.BeginTransaction())
                 {
                     try
@@ -25,8 +25,8 @@ namespace Repositories
                         foreach (var address in addresses)
                         {
                             var query = "INSERT INTO Address (TypeStreet, Street, ZipCode, Neighborhood, City, State, Number, Complement) VALUES (@TypeStreet, @Street, @ZipCode, @Neighborhood, @City, @State, @Number, @Complement)";
-                                
-                            var result = db.Execute(query, new {TypeStreet = address.TypeStreet, Street = address.Street, ZipCode = address.ZipCode, Neighborhood = address.Neighborhood, City = address.City, State = address.State, Number = address.Number, Complement = address.Complement}, transaction);
+
+                            var result = db.Execute(query, new { TypeStreet = address.TypeStreet, Street = address.Street, ZipCode = address.ZipCode, Neighborhood = address.Neighborhood, City = address.City, State = address.State, Number = address.Number, Complement = address.Complement }, transaction);
                             transaction.Commit();
                             if (result == 0)
                             {
@@ -44,7 +44,7 @@ namespace Repositories
                         return false;
                     }
                 }
-            }         
+            }
         }
 
         public bool Insert(Address adress)

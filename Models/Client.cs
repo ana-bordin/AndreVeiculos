@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models
+﻿namespace Models
 {
     public class Client : People
     {
-        
+
         public decimal PersonIncome { get; set; }
         public string PDF { get; set; }
         public override string Tipo()
@@ -20,9 +14,9 @@ namespace Models
         : base(document, name, birthDate, address, telephone, email)
         {
             PersonIncome = personIncome;
-            PDF = pdf;  
+            PDF = pdf;
         }
 
-        
+
     }
 }

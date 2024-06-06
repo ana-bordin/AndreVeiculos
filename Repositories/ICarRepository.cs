@@ -1,9 +1,4 @@
 ﻿using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repositories
 {
@@ -12,6 +7,6 @@ namespace Repositories
         bool InsertAll(List<Car> cars);
         bool Insert(Car car);
         List<Car> GetAll();
-        
+
     }
 }

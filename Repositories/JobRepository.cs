@@ -66,7 +66,7 @@ namespace Repositories
         {
             using (var db = new SqlConnection(_conn))
             {
-                db.Open();        
+                db.Open();
                 return db.Query<Job>("SELECT * FROM Job").ToList();
             }
         }

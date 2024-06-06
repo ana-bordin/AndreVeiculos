@@ -1,7 +1,10 @@
-﻿namespace Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Models
 {
     public class Car
     {
+        [Key]
         public string LicensePlate { get; set; }
         public string Name { get; set; }
         public int ModelYear { get; set; }
