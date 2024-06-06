@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,10 @@ namespace Repositories
 {
     public class CreditCardRepository
     {
-        private readonly string _conn;
-
-        public CreditCardRepository(string connectionString)
+        public string _conn { get; set; }
+        public CreditCardRepository()
         {
-            _conn = connectionString;
+            _conn = ConfigurationManager.ConnectionStrings["StringConnection"].ConnectionString;
         }
 
         public bool InsertAll(List<CreditCard> creditCards)

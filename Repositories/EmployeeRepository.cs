@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,11 @@ namespace Repositories
 {
     public class EmployeeRepository
     {
-        private readonly string _conn;
+        private string _conn { get; set; }
 
-        public EmployeeRepository(string connectionString)
+        public EmployeeRepository()
         {
-            _conn = connectionString;
+            _conn = ConfigurationManager.ConnectionStrings["StringConnection"].ConnectionString;
         }
 
         public bool InsertAll(List<Employee> employees)

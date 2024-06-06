@@ -18,7 +18,8 @@ namespace Main
 
         static List<Car> cars = new List<Car>();
         static List<Buy> buys = new List<Buy>();
-        static List<Job> jobs = new List<Job>() {
+        static List<Job> jobs = new List<Job>()
+        {
             new Job { Description = "Limpeza exterior e interior do carro." },
             new Job { Description = "Substituição do óleo do motor." },
             new Job { Description = "Ajuste do equilíbrio dos pneus." },
@@ -29,10 +30,24 @@ namespace Main
             new Job { Description = "Restauração do brilho da pintura e aplicação de cera protetora." }
         };
         static List<CarJob> carJobs = new List<CarJob>();
-        static List<People> peoples = new List<People>();
+        static List<Client> clients = new List<Client>();
+        static List<Employee> employees = new List<Employee>();
         static List<Address> addresses = new List<Address>();
 
+        static List<PositionCompany> positionsCompany = new List<PositionCompany>()
+        {
+            new PositionCompany { Description = "Manager" },
+            new PositionCompany { Description = "Sales Consultant" },
+            new PositionCompany { Description = "Purchasing Manager" },
+            new PositionCompany { Description = "Car Mechanic" },
+            new PositionCompany { Description = "Cleaning Assistant" },
+            new PositionCompany { Description = "Receptionist"},
+            new PositionCompany { Description = "Detailer" }
+        };
 
+        static List<CreditCard> creditCards = new List<CreditCard>();
+        static List<Pix> pixs = new List<Pix>();
+        static List<BankPaymentSlip> bankPaymentSlips = new List<BankPaymentSlip>();
 
 
         static void CreateListCar()
@@ -68,7 +83,7 @@ namespace Main
                 carJobs.Add(carService);
             }
         }
-        static void CreateListPeoples()
+        static void CreateListPeoples(string type)
         {
             for (int i = 0; i < sizeList; i++)
             {
@@ -76,16 +91,37 @@ namespace Main
                 AddressRepository addressRepository = new AddressRepository();
                 addressRepository.Insert(address);
                 addresses = addressRepository.GetAll();
-               
-                People people = new People
+                if (type == "Client")
                 {
-                    Document = PeopleGenerator.GenerateDocument(),
-                    Name = PeopleGenerator.GenerateName(),
-                    BirthDate = PeopleGenerator.GenerateBirth(),
-                    Address = addresses[addresses.Count-1],
-                    Telephone = PeopleGenerator.GenerateTelephone(),
-                    Email = PeopleGenerator.GenerateEmail()
-                };
+                    Client client = new Client
+                    (
+                        document: PeopleGenerator.GenerateDocument(),
+                        name: PeopleGenerator.GenerateName(),
+                        birthDate: PeopleGenerator.GenerateBirth(),
+                        address: addresses[addresses.Count - 1],
+                        telephone: PeopleGenerator.GenerateTelephone(),
+                        email: PeopleGenerator.GenerateEmail(),
+                        personIncome: random.Next(1000, 10000),
+                        pdf: "PDF.pdf"
+                    );
+                    clients.Add(client);
+                }
+                else
+                {
+                    Employee employee = new Employee
+                    (
+                        document: PeopleGenerator.GenerateDocument(),
+                        name: PeopleGenerator.GenerateName(),
+                        birthDate: PeopleGenerator.GenerateBirth(),
+                        address: addresses[addresses.Count - 1],
+                        telephone: PeopleGenerator.GenerateTelephone(),
+                        email: PeopleGenerator.GenerateEmail(),
+                        positionCompany: positionsCompany[random.Next(positionsCompany.Count - 1)],
+                        commissionPercentage: random.Next(0, 100),
+                        commission: random.Next(1000, 10000)
+                    );
+                    employees.Add(employee);
+                }
             }
         }
 
@@ -108,7 +144,6 @@ namespace Main
             Console.ReadKey();
 
             Console.WriteLine("Gerar serviços:");
-            CreateListCarJob();
             JobRepository JobRepository = new JobRepository();
             JobRepository.InsertAll(jobs);
             jobs.Clear();
@@ -123,13 +158,57 @@ namespace Main
             carJobs = carJobRepository.GetAll();
             Console.ReadKey();
 
-            Console.WriteLine("Gerar pessoas:");
-            CreateListPeoples();
-            PeopleRepository peopleRepository = new PeopleRepository();
-            peopleRepository.InsertAll(peoples);
-            peoples.Clear();
-            peoples = peopleRepository.GetAll();
+            Console.WriteLine("Gerar clientes:");
+            CreateListPeoples("Client");
+            ClientRepository clientRepository = new ClientRepository();
+            clientRepository.InsertAll(clients);
+            clients.Clear();
+            clients = clientRepository.GetAll();
             Console.ReadKey();
+
+            Console.WriteLine("Gerar Cargos");
+            PositionCompanyRepository positionCompanyRepository = new PositionCompanyRepository();
+            positionCompanyRepository.InsertAll(positionsCompany);
+            positionsCompany.Clear();
+            positionsCompany = positionCompanyRepository.GetAll();
+            Console.ReadKey();
+
+            Console.WriteLine("Gerar empregados");
+            CreateListPeoples("Employee");
+            EmployeeRepository employeeRepository = new EmployeeRepository();
+            employeeRepository.InsertAll(employees);
+            employees.Clear();
+            employees = employeeRepository.GetAll();
+            Console.ReadKey();
+
+            Console.WriteLine("Gerar Cartão de crédito");
+            CreditCard creditCard = PaymentGenerator.CreditCardGenerate();
+            creditCards.Add(creditCard);
+            CreditCardRepository creditCardRepository = new CreditCardRepository();
+            creditCardRepository.InsertAll(creditCards);
+            creditCards.Clear();
+            creditCards = creditCardRepository.GetAll();
+            Console.ReadKey();
+
+            Console.WriteLine("Gerar Pix");
+            Pix pix = PaymentGenerator.PixGenerate();
+            pixs.Add(pix);
+            PixRepository pixRepository = new PixRepository();
+            pixRepository.InsertAll(pixs);
+            pixs.Clear();
+            pixs = pixRepository.GetAll();
+            Console.ReadKey();
+
+
+            Console.WriteLine("Gerar boleto");
+            BankPaymentSlip bankPaymentSlip = PaymentGenerator.BankPaymentSlipGenerate();
+            bankPaymentSlips.Add(bankPaymentSlip);
+            BankPaymentSlipRepository bankPaymentSlipRepository = new BankPaymentSlipRepository();
+            bankPaymentSlipRepository.InsertAll(bankPaymentSlips);
+            bankPaymentSlips.Clear();
+            bankPaymentSlips = bankPaymentSlipRepository.GetAll();
+            Console.ReadKey();
+
 
 
             //if (JsonRepository.InsertJson(cars, Jobs, carJobs))
