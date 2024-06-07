@@ -4,6 +4,7 @@ using CarAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarAPI.Migrations
 {
     [DbContext(typeof(CarAPIContext))]
-    partial class CarAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20240607142833_att")]
+    partial class att
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,31 +87,6 @@ namespace CarAPI.Migrations
                     b.ToTable("BankPaymentSlip");
                 });
 
-            modelBuilder.Entity("Models.Buy", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CarLicensePlate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Value")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarLicensePlate");
-
-                    b.ToTable("Buy");
-                });
-
             modelBuilder.Entity("Models.Car", b =>
                 {
                     b.Property<string>("LicensePlate")
@@ -170,6 +147,7 @@ namespace CarAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CreditCardCardNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("PaymentDate")
@@ -303,17 +281,6 @@ namespace CarAPI.Migrations
                     b.ToTable("Employee", (string)null);
                 });
 
-            modelBuilder.Entity("Models.Buy", b =>
-                {
-                    b.HasOne("Models.Car", "Car")
-                        .WithMany()
-                        .HasForeignKey("CarLicensePlate")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Car");
-                });
-
             modelBuilder.Entity("Models.Payment", b =>
                 {
                     b.HasOne("Models.BankPaymentSlip", "BankPaymentSlip")
@@ -324,7 +291,9 @@ namespace CarAPI.Migrations
 
                     b.HasOne("Models.CreditCard", "CreditCard")
                         .WithMany()
-                        .HasForeignKey("CreditCardCardNumber");
+                        .HasForeignKey("CreditCardCardNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Models.Pix", "Pix")
                         .WithMany()

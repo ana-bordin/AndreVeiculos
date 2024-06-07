@@ -12,55 +12,55 @@ namespace CarAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientsController : ControllerBase
+    public class CreditCardsController : ControllerBase
     {
         private readonly CarAPIContext _context;
 
-        public ClientsController(CarAPIContext context)
+        public CreditCardsController(CarAPIContext context)
         {
             _context = context;
         }
 
-        // GET: api/Clients
+        // GET: api/CreditCards
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetClient()
+        public async Task<ActionResult<IEnumerable<CreditCard>>> GetCreditCard()
         {
-          if (_context.Client == null)
+          if (_context.CreditCard == null)
           {
               return NotFound();
           }
-            return await _context.Client.Include(e => e.Address).ToListAsync();
+            return await _context.CreditCard.ToListAsync();
         }
 
-        // GET: api/Clients/5
+        // GET: api/CreditCards/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Client>> GetClient(string id)
+        public async Task<ActionResult<CreditCard>> GetCreditCard(string id)
         {
-          if (_context.Client == null)
+          if (_context.CreditCard == null)
           {
               return NotFound();
           }
-            var client = await _context.Client.Include(e => e.Address).Where(c => c.Document == id).FirstOrDefaultAsync();
+            var creditCard = await _context.CreditCard.FindAsync(id);
 
-            if (client == null)
+            if (creditCard == null)
             {
                 return NotFound();
             }
 
-            return client;
+            return creditCard;
         }
 
-        // PUT: api/Clients/5
+        // PUT: api/CreditCards/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClient(string id, Client client)
+        public async Task<IActionResult> PutCreditCard(string id, CreditCard creditCard)
         {
-            if (id != client.Document)
+            if (id != creditCard.CardNumber)
             {
                 return BadRequest();
             }
 
-            _context.Entry(client).State = EntityState.Modified;
+            _context.Entry(creditCard).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace CarAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClientExists(id))
+                if (!CreditCardExists(id))
                 {
                     return NotFound();
                 }
@@ -81,23 +81,23 @@ namespace CarAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Clients
+        // POST: api/CreditCards
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Client>> PostClient(Client client)
+        public async Task<ActionResult<CreditCard>> PostCreditCard(CreditCard creditCard)
         {
-          if (_context.Client == null)
+          if (_context.CreditCard == null)
           {
-              return Problem("Entity set 'CarAPIContext.Client'  is null.");
+              return Problem("Entity set 'CarAPIContext.CreditCard'  is null.");
           }
-            _context.Client.Add(client);
+            _context.CreditCard.Add(creditCard);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (ClientExists(client.Document))
+                if (CreditCardExists(creditCard.CardNumber))
                 {
                     return Conflict();
                 }
@@ -107,32 +107,32 @@ namespace CarAPI.Controllers
                 }
             }
 
-            return CreatedAtAction("GetClient", new { id = client.Document }, client);
+            return CreatedAtAction("GetCreditCard", new { id = creditCard.CardNumber }, creditCard);
         }
 
-        // DELETE: api/Clients/5
+        // DELETE: api/CreditCards/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClient(string id)
+        public async Task<IActionResult> DeleteCreditCard(string id)
         {
-            if (_context.Client == null)
+            if (_context.CreditCard == null)
             {
                 return NotFound();
             }
-            var client = await _context.Client.FindAsync(id);
-            if (client == null)
+            var creditCard = await _context.CreditCard.FindAsync(id);
+            if (creditCard == null)
             {
                 return NotFound();
             }
 
-            _context.Client.Remove(client);
+            _context.CreditCard.Remove(creditCard);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ClientExists(string id)
+        private bool CreditCardExists(string id)
         {
-            return (_context.Client?.Any(e => e.Document == id)).GetValueOrDefault();
+            return (_context.CreditCard?.Any(e => e.CardNumber == id)).GetValueOrDefault();
         }
     }
 }

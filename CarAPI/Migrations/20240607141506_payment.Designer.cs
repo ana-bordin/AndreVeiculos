@@ -4,6 +4,7 @@ using CarAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarAPI.Migrations
 {
     [DbContext(typeof(CarAPIContext))]
-    partial class CarAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20240607141506_payment")]
+    partial class payment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,31 +87,6 @@ namespace CarAPI.Migrations
                     b.ToTable("BankPaymentSlip");
                 });
 
-            modelBuilder.Entity("Models.Buy", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CarLicensePlate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Value")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarLicensePlate");
-
-                    b.ToTable("Buy");
-                });
-
             modelBuilder.Entity("Models.Car", b =>
                 {
                     b.Property<string>("LicensePlate")
@@ -170,6 +147,7 @@ namespace CarAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CreditCardCardNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("PaymentDate")
@@ -200,6 +178,10 @@ namespace CarAPI.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -216,7 +198,9 @@ namespace CarAPI.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("Person", (string)null);
+                    b.ToTable("Person");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Person");
                 });
 
             modelBuilder.Entity("Models.Pix", b =>
@@ -282,7 +266,7 @@ namespace CarAPI.Migrations
                     b.Property<decimal>("PersonIncome")
                         .HasColumnType("decimal(18,2)");
 
-                    b.ToTable("Client", (string)null);
+                    b.HasDiscriminator().HasValue("Client");
                 });
 
             modelBuilder.Entity("Models.Employee", b =>
@@ -300,18 +284,7 @@ namespace CarAPI.Migrations
 
                     b.HasIndex("PositionCompanyId");
 
-                    b.ToTable("Employee", (string)null);
-                });
-
-            modelBuilder.Entity("Models.Buy", b =>
-                {
-                    b.HasOne("Models.Car", "Car")
-                        .WithMany()
-                        .HasForeignKey("CarLicensePlate")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Car");
+                    b.HasDiscriminator().HasValue("Employee");
                 });
 
             modelBuilder.Entity("Models.Payment", b =>
@@ -324,7 +297,9 @@ namespace CarAPI.Migrations
 
                     b.HasOne("Models.CreditCard", "CreditCard")
                         .WithMany()
-                        .HasForeignKey("CreditCardCardNumber");
+                        .HasForeignKey("CreditCardCardNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Models.Pix", "Pix")
                         .WithMany()
@@ -361,23 +336,8 @@ namespace CarAPI.Migrations
                     b.Navigation("PixType");
                 });
 
-            modelBuilder.Entity("Models.Client", b =>
-                {
-                    b.HasOne("Models.Person", null)
-                        .WithOne()
-                        .HasForeignKey("Models.Client", "Document")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Models.Employee", b =>
                 {
-                    b.HasOne("Models.Person", null)
-                        .WithOne()
-                        .HasForeignKey("Models.Employee", "Document")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
                     b.HasOne("Models.PositionCompany", "PositionCompany")
                         .WithMany()
                         .HasForeignKey("PositionCompanyId")

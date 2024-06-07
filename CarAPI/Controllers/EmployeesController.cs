@@ -12,55 +12,55 @@ namespace CarAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientsController : ControllerBase
+    public class EmployeesController : ControllerBase
     {
         private readonly CarAPIContext _context;
 
-        public ClientsController(CarAPIContext context)
+        public EmployeesController(CarAPIContext context)
         {
             _context = context;
         }
 
-        // GET: api/Clients
+        // GET: api/Employees
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetClient()
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployee()
         {
-          if (_context.Client == null)
+          if (_context.Employee == null)
           {
               return NotFound();
           }
-            return await _context.Client.Include(e => e.Address).ToListAsync();
+            return await _context.Employee.Include(e =>e.Address).Include(c => c.PositionCompany).ToListAsync(); 
         }
 
-        // GET: api/Clients/5
+        // GET: api/Employees/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Client>> GetClient(string id)
+        public async Task<ActionResult<Employee>> GetEmployee(string id)
         {
-          if (_context.Client == null)
+          if (_context.Employee == null)
           {
               return NotFound();
           }
-            var client = await _context.Client.Include(e => e.Address).Where(c => c.Document == id).FirstOrDefaultAsync();
+            var employee = await _context.Employee.Include(e => e.Address).Include(c => c.PositionCompany).Where(d => d.Document == id).FirstOrDefaultAsync();
 
-            if (client == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return client;
+            return employee;
         }
 
-        // PUT: api/Clients/5
+        // PUT: api/Employees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClient(string id, Client client)
+        public async Task<IActionResult> PutEmployee(string id, Employee employee)
         {
-            if (id != client.Document)
+            if (id != employee.Document)
             {
                 return BadRequest();
             }
 
-            _context.Entry(client).State = EntityState.Modified;
+            _context.Entry(employee).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace CarAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClientExists(id))
+                if (!EmployeeExists(id))
                 {
                     return NotFound();
                 }
@@ -81,23 +81,23 @@ namespace CarAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Clients
+        // POST: api/Employees
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Client>> PostClient(Client client)
+        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
         {
-          if (_context.Client == null)
+          if (_context.Employee == null)
           {
-              return Problem("Entity set 'CarAPIContext.Client'  is null.");
+              return Problem("Entity set 'CarAPIContext.Employee'  is null.");
           }
-            _context.Client.Add(client);
+            _context.Employee.Add(employee);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (ClientExists(client.Document))
+                if (EmployeeExists(employee.Document))
                 {
                     return Conflict();
                 }
@@ -107,32 +107,32 @@ namespace CarAPI.Controllers
                 }
             }
 
-            return CreatedAtAction("GetClient", new { id = client.Document }, client);
+            return CreatedAtAction("GetEmployee", new { id = employee.Document }, employee);
         }
 
-        // DELETE: api/Clients/5
+        // DELETE: api/Employees/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClient(string id)
+        public async Task<IActionResult> DeleteEmployee(string id)
         {
-            if (_context.Client == null)
+            if (_context.Employee == null)
             {
                 return NotFound();
             }
-            var client = await _context.Client.FindAsync(id);
-            if (client == null)
+            var employee = await _context.Employee.FindAsync(id);
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            _context.Client.Remove(client);
+            _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ClientExists(string id)
+        private bool EmployeeExists(string id)
         {
-            return (_context.Client?.Any(e => e.Document == id)).GetValueOrDefault();
+            return (_context.Employee?.Any(e => e.Document == id)).GetValueOrDefault();
         }
     }
 }
