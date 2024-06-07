@@ -12,5 +12,6 @@ namespace Models
         public Client Client { get; set; }
         public Employee Employee { get; set; }
         public Payment Payment { get; set; }
+
     }
 }
