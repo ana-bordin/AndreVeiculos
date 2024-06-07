@@ -19,13 +19,17 @@ namespace CarAPI.Data
         public DbSet<Models.Pix>? Pix { get; set; }
         public DbSet<Models.Buy> Buy { get; set; }
         public DbSet<Models.Payment> Payment { get; set; }
-        
-        //public DbSet<Models.PositionCompany> PositionCompany { get; set; } = default!;
-        //public DbSet<Models.Address> Address { get; set; } = default!;
+        public DbSet<Models.Address>? Address { get; set; }
+
+        public DbSet<Models.CarJob>? CarJob { get; set; }
+
+        public DbSet<Models.Job>? Job { get; set; }
+
         public DbSet<Models.Sale> Sale { get; set; }
 
-        //public DbSet<Models.BankPaymentSlip> BankPaymentSlip { get; set; } = default!;
-        
+        public DbSet<Models.PositionCompany>? PositionCompany { get; set; }
+
+        public DbSet<Models.PixType>? PixType { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,7 +41,7 @@ namespace CarAPI.Data
             modelBuilder.Entity<Models.Employee>().ToTable("Employee");
             //modelBuilder.Entity<Models.Employee>().HasKey(e => e.Document);
         }
-        
+
 
     }
 }

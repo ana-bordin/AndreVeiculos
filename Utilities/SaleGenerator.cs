@@ -12,7 +12,7 @@ namespace Utilities
             Sale sale = new Sale();
 
             sale.Car = cars[random.Next(cars.Count - 1)];
-            sale.SaleDate = DateOnly.FromDateTime(DateTime.Now);
+            sale.SaleDate = DateTime.Now;
             sale.Value = random.Next(10000, 100000);
             sale.Client = clients[random.Next(clients.Count - 1)];
             sale.Employee = employees[random.Next(employees.Count - 1)];
