@@ -34,7 +34,7 @@ namespace Repositories
                                 Telephone = client.Telephone,
                                 Email = client.Email,
                                 PersonIncome = client.PersonIncome,
-                                PDF = client.PDF
+                                //PDF = client.PDF
                             }, transaction);
 
                             if (result == 0)
@@ -73,7 +73,7 @@ namespace Repositories
                             Telephone = client.Telephone,
                             Email = client.Email,
                             PersonIncome = client.PersonIncome,
-                            PDF = client.PDF
+                            //PDF = client.PDF
                         });
                     return true;
                 }

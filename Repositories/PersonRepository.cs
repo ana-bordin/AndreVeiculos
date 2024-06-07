@@ -5,16 +5,16 @@ using System.Configuration;
 
 namespace Repositories
 {
-    public class PeopleRepository
+    public class PersonRepository
     {
         private string _conn { get; set; }
 
-        public PeopleRepository()
+        public PersonRepository()
         {
             _conn = ConfigurationManager.ConnectionStrings["StringConnection"].ConnectionString;
         }
 
-        public bool InsertAll(List<People> people)
+        public bool InsertAll(List<Person> people)
         {
             using (var db = new SqlConnection(_conn))
             {
@@ -40,8 +40,8 @@ namespace Repositories
                                 Complement = person.Address.Complement
                             }, transaction).Single();
 
-                            var peopleQuery = "INSERT INTO People (Document, Name, BirthDate, AddressId, Telephone, Email) VALUES (@Document, @Name, @BirthDate, @AddressId, @Telephone, @Email)";
-                            var result = db.Execute(peopleQuery, new
+                            var PersonQuery = "INSERT INTO Person (Document, Name, BirthDate, AddressId, Telephone, Email) VALUES (@Document, @Name, @BirthDate, @AddressId, @Telephone, @Email)";
+                            var result = db.Execute(PersonQuery, new
                             {
                                 Document = person.Document,
                                 Name = person.Name,
@@ -70,7 +70,7 @@ namespace Repositories
             }
         }
 
-        public bool Insert(People person)
+        public bool Insert(Person person)
         {
             using (var db = new SqlConnection(_conn))
             {
@@ -91,8 +91,8 @@ namespace Repositories
                         Complement = person.Address.Complement
                     }).Single();
 
-                    var peopleQuery = "INSERT INTO People (Document, Name, BirthDate, AddressId, Telephone, Email) VALUES (@Document, @Name, @BirthDate, @AddressId, @Telephone, @Email)";
-                    db.Execute(peopleQuery, new
+                    var PersonQuery = "INSERT INTO Person (Document, Name, BirthDate, AddressId, Telephone, Email) VALUES (@Document, @Name, @BirthDate, @AddressId, @Telephone, @Email)";
+                    db.Execute(PersonQuery, new
                     {
                         Document = person.Document,
                         Name = person.Name,
@@ -112,13 +112,13 @@ namespace Repositories
             }
         }
 
-        public List<People> GetAll()
+        public List<Person> GetAll()
         {
             using (var db = new SqlConnection(_conn))
             {
                 db.Open();
-                var query = "SELECT p.*, a.* FROM People p JOIN Address a ON p.AddressId = a.Id";
-                return db.Query<People, Address, People>(query, (person, address) =>
+                var query = "SELECT p.*, a.* FROM Person p JOIN Address a ON p.AddressId = a.Id";
+                return db.Query<Person, Address, Person>(query, (person, address) =>
                 {
                     person.Address = address;
                     return person;
