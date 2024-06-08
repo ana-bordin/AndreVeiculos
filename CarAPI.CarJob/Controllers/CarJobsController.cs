@@ -32,8 +32,8 @@ namespace CarAPI.CarJob.Controllers
           }
             Models.CarJob carJob = new Models.CarJob();
 
-            carJob.Car = await _context.Car.FindAsync(carJobDTO.Car.LicensePlate);
-            carJob.Job = await _context.Job.FindAsync(carJobDTO.Job.Id);
+            //carJob.Car = await _context.Car.FindAsync(carJobDTO.Car.LicensePlate);
+            //carJob.Job = await _context.Job.FindAsync(carJobDTO.Job.Id);
 
             _context.CarJob.Add(carJob);
             await _context.SaveChangesAsync();

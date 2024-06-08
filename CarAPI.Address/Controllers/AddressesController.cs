@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarAPI.Address.Data;
-using Models;
+using Newtonsoft.Json;
 
 namespace CarAPI.Address.Controllers
 {
@@ -25,30 +20,26 @@ namespace CarAPI.Address.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Models.Address>>> GetAddress()
         {
-          if (_context.Address == null)
-          {
-              return NotFound();
-          }
+            if (_context.Address == null)
+            {
+                return NotFound();
+            }
             return await _context.Address.ToListAsync();
         }
 
         // GET: api/Addresses/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Models.Address>> GetAddress(int id)
-        {
-          if (_context.Address == null)
-          {
-              return NotFound();
-          }
-            var address = await _context.Address.FindAsync(id);
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Models.Address>> GetAddress(int id)
+        //{
+        //    if (_context.Address == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (address == null)
-            {
-                return NotFound();
-            }
-
-            return address;
-        }
+        //    var address = await _context.Address.FindAsync(id);
+            
+        //    return address;
+        //}
 
         // PUT: api/Addresses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -86,13 +77,10 @@ namespace CarAPI.Address.Controllers
         [HttpPost]
         public async Task<ActionResult<Models.Address>> PostAddress(Models.Address address)
         {
-          if (_context.Address == null)
-          {
-              return Problem("Entity set 'CarAPIAddressContext.Address'  is null.");
-          }
-            _context.Address.Add(address);
-            await _context.SaveChangesAsync();
-
+            if (_context.Address == null)
+            {
+                return Problem("Entity set 'CarAPIAddressContext.Address'  is null.");
+            }
             return CreatedAtAction("GetAddress", new { id = address.Id }, address);
         }
 
@@ -119,6 +107,27 @@ namespace CarAPI.Address.Controllers
         private bool AddressExists(int id)
         {
             return (_context.Address?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        [HttpGet("zipCode/{zipCode}")]
+        public async Task<ActionResult<Models.Address>> GetAddressZipCodeAsync(string zipCode)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://viacep.com.br/");
+                var response = await client.GetAsync($"ws/{zipCode}/json/");
+                if (response.IsSuccessStatusCode)
+                {
+                    var stringResult = await response.Content.ReadAsStringAsync();
+                    var address = JsonConvert.DeserializeObject<Models.Address>(stringResult);
+                    return address;
+                }
+                else
+                {
+                    return NotFound("Erro ao obter endereço do serviço ViaCEP");
+
+                }
+            }
         }
     }
 }
