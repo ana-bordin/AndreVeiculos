@@ -1,4 +1,4 @@
-namespace CarAPI
+namespace CarAPI.Buy
 {
     public class WeatherForecast
     {

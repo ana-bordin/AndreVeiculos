@@ -80,44 +80,44 @@ namespace Main
         }
         static void CreateListPeoples(string type)
         {
-            for (int i = 0; i < sizeList; i++)
-            {
-                Address address = AddressGenerator.GenerateAdress();
-                AddressRepository addressRepository = new AddressRepository();
-                addressRepository.Insert(address);
-                addresses = addressRepository.GetAll();
-                if (type == "Client")
-                {
-                    Client client = new Client
-                    (
-                        document: PeopleGenerator.GenerateDocument(),
-                        name: PeopleGenerator.GenerateName(),
-                        birthDate: PeopleGenerator.GenerateBirth(),
-                        address: addresses[addresses.Count - 1],
-                        telephone: PeopleGenerator.GenerateTelephone(),
-                        email: PeopleGenerator.GenerateEmail(),
-                        personIncome: random.Next(1000, 10000),
-                        pdf: "PDF.pdf"
-                    );
-                    clients.Add(client);
-                }
-                else
-                {
-                    Employee employee = new Employee
-                    (
-                        document: PeopleGenerator.GenerateDocument(),
-                        name: PeopleGenerator.GenerateName(),
-                        birthDate: PeopleGenerator.GenerateBirth(),
-                        address: addresses[addresses.Count - 1],
-                        telephone: PeopleGenerator.GenerateTelephone(),
-                        email: PeopleGenerator.GenerateEmail(),
-                        positionCompany: positionsCompany[random.Next(positionsCompany.Count - 1)],
-                        commissionPercentage: random.Next(0, 100),
-                        commission: random.Next(1000, 10000)
-                    );
-                    employees.Add(employee);
-                }
-            }
+            //for (int i = 0; i < sizeList; i++)
+            //{
+            //    Address address = AddressGenerator.GenerateAdress();
+            //    AddressRepository addressRepository = new AddressRepository();
+            //    addressRepository.Insert(address);
+            //    addresses = addressRepository.GetAll();
+            //    if (type == "Client")
+            //    {
+            //        Client client = new Client
+            //        (
+            //            document: PeopleGenerator.GenerateDocument(),
+            //            name: PeopleGenerator.GenerateName(),
+            //            birthDate: PeopleGenerator.GenerateBirth(),
+            //            address: addresses[addresses.Count - 1],
+            //            telephone: PeopleGenerator.GenerateTelephone(),
+            //            email: PeopleGenerator.GenerateEmail(),
+            //            personIncome: random.Next(1000, 10000),
+            //            pdf: "PDF.pdf"
+            //        );
+            //        clients.Add(client);
+            //    }
+            //    else
+            //    {
+            //        Employee employee = new Employee
+            //        (
+            //            document: PeopleGenerator.GenerateDocument(),
+            //            name: PeopleGenerator.GenerateName(),
+            //            birthDate: PeopleGenerator.GenerateBirth(),
+            //            address: addresses[addresses.Count - 1],
+            //            telephone: PeopleGenerator.GenerateTelephone(),
+            //            email: PeopleGenerator.GenerateEmail(),
+            //            positionCompany: positionsCompany[random.Next(positionsCompany.Count - 1)],
+            //            commissionPercentage: random.Next(0, 100),
+            //            commission: random.Next(1000, 10000)
+            //        );
+            //        employees.Add(employee);
+            //    }
+            //}
         }
 
 

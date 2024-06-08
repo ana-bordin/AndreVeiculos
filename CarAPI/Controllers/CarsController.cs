@@ -45,8 +45,7 @@ namespace CarAPI.Controllers
             return car;
         }
 
-        // PUT: api/Cars/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/Cars/5    
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCar(string id, Car car)
         {
@@ -77,8 +76,8 @@ namespace CarAPI.Controllers
         }
 
         // POST: api/Cars
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+
         public async Task<ActionResult<Car>> PostCar(Car car)
         {
             if (_context.Car == null)

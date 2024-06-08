@@ -23,7 +23,7 @@ namespace Utilities
                 CreditCard = CreditCardGenerate(),
                 BankPaymentSlip = bankPaymentSlip,
                 Pix = pix,
-                PaymentDate = DateOnly.FromDateTime(DateTime.Now)
+                PaymentDate = DateTime.Now
             };
         }
         public static CreditCard CreditCardGenerate()
@@ -38,7 +38,7 @@ namespace Utilities
                 CardNumber = cardNumber,
                 CardName = "John Doe",
                 SecurityCode = "123",
-                ExpirationDate = DateOnly.Parse("01-12-2025")
+                ExpirationDate = DateTime.Parse("01-12-2025")
             };
         }
 
@@ -48,7 +48,7 @@ namespace Utilities
             {
                 Number = 1234566,
                 //"34191.79001 01043.510047 91020.150008 5 12340000010000"
-                ExpirationDate = DateOnly.Parse("11-10-2000")
+                ExpirationDate = DateTime.Parse("11-10-2000")
             };
         }
 

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarAPI.Controllers
+namespace CarAPIJob.Controllers
 {
     [ApiController]
     [Route("[controller]")]
