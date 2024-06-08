@@ -38,7 +38,7 @@ namespace CarAPI.Client.Controllers
             {
                 return NotFound();
             }
-            var client = await _context.Client.Include(e => e.Address).Where(c => c.Document == id).FirstOrDefaultAsync();
+            var client = await _context.Client.Include(e => e.Address).Where(c => c.Document == id).SingleOrDefaultAsync();
 
             if (client == null)
             {
@@ -117,11 +117,16 @@ namespace CarAPI.Client.Controllers
             }
             var addressResult = await _addressController.GetAddressZipCodeAsync(client.Address.ZipCode);
 
+            if (addressResult == null)
+            {
+                return BadRequest("CEP invalido");
+            }
             client.Address.State = addressResult.Value.State;
-            //client.Endereco.Bairro = endereco.Bairro;
-            //client.Endereco.Uf = endereco.Uf;
-            //client.Endereco.Cidade = endereco.Cidade;
-            // Preencha outros campos de endereço conforme necessário
+            client.Address.City = addressResult.Value.City;
+            client.Address.Neighborhood = addressResult.Value.Neighborhood;
+            client.Address.Street = addressResult.Value.Street;
+           
+
             _context.Client.Add(client);
             try
             {
