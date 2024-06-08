@@ -1,17 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CarAPI.Data;
+using CarAPI.Payment.Data;
 using Models;
 
-namespace CarAPI.Controllers
+namespace CarAPI.Payment.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PixesController : ControllerBase
     {
-        private readonly CarAPIContext _context;
+        private readonly CarAPIPaymentContext _context;
 
-        public PixesController(CarAPIContext context)
+        public PixesController(CarAPIPaymentContext context)
         {
             _context = context;
         }
@@ -24,7 +29,7 @@ namespace CarAPI.Controllers
           {
               return NotFound();
           }
-            return await _context.Pix.Include(e => e.PixType).ToListAsync();
+            return await _context.Pix.Include(p => p.PixType).ToListAsync();
         }
 
         // GET: api/Pixes/5
@@ -35,7 +40,7 @@ namespace CarAPI.Controllers
           {
               return NotFound();
           }
-            var pix = await _context.Pix.Include(e => e.PixType).Where(e => e.Id == id).FirstOrDefaultAsync();
+            var pix = await _context.Pix.Include(p => p.PixType).Where(p => p.Id == id).SingleOrDefaultAsync();
 
             if (pix == null)
             {
@@ -83,7 +88,7 @@ namespace CarAPI.Controllers
         {
           if (_context.Pix == null)
           {
-              return Problem("Entity set 'CarAPIContext.Pix'  is null.");
+              return Problem("Entity set 'CarAPIPaymentContext.Pix'  is null.");
           }
             _context.Pix.Add(pix);
             await _context.SaveChangesAsync();
