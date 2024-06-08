@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using CarAPI.Client.Data;
+using CarAPI.Address.Controllers;
+using CarAPI.Address.Data;
 namespace CarAPI.Client
 {
     public class Program
@@ -11,13 +12,15 @@ namespace CarAPI.Client
             builder.Services.AddDbContext<CarAPIClientContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CarAPIClientContext") ?? throw new InvalidOperationException("Connection string 'CarAPIClientContext' not found.")));
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            //builder.Services.AddControllers();
+
+            builder.Services.AddControllersWithViews();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -30,8 +33,7 @@ namespace CarAPI.Client
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
-
+            
             app.MapControllers();
 
             app.Run();
