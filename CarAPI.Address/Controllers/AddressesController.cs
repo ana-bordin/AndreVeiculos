@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using CarAPI.Address.Data;
 using Newtonsoft.Json;
+using Models.DTO;
 
 namespace CarAPI.Address.Controllers
 {
@@ -75,13 +76,32 @@ namespace CarAPI.Address.Controllers
         // POST: api/Addresses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Models.Address>> PostAddress(Models.Address address)
+        public async Task<Models.Address> PostAddress(Models.Address newAddress)
         {
-            if (_context.Address == null)
+            var address = new Models.Address();
+
+            using (var client = new HttpClient())
             {
-                return Problem("Entity set 'CarAPIAddressContext.Address'  is null.");
-            }
-            return CreatedAtAction("GetAddress", new { id = address.Id }, address);
+                client.BaseAddress = new Uri("https://viacep.com.br/");
+                var response = await client.GetAsync($"ws/{newAddress.ZipCode}/json/");
+                if (response.IsSuccessStatusCode)
+                {
+                    var stringResult = await response.Content.ReadAsStringAsync();
+                    address = JsonConvert.DeserializeObject<Models.Address>(stringResult);
+                    address.TypeStreet = "";
+                    address.Complement = newAddress.Complement;
+                    address.Number = newAddress.Number;
+                    //_context.Address.Add(address);
+                    //_context.SaveChanges();
+                }
+                else
+                {
+                    NotFound("Erro ao obter endereço do serviço via CEP");
+                    return null;
+                }
+            } 
+            CreatedAtAction("GetAddress", new { id = address.Id }, address);
+            return address;
         }
 
         // DELETE: api/Addresses/5
@@ -110,8 +130,12 @@ namespace CarAPI.Address.Controllers
         }
 
         [HttpGet("zipCode/{zipCode}")]
-        public async Task<ActionResult<Models.Address>> GetAddressZipCodeAsync(string zipCode)
+        public async Task<ActionResult<Models.Address>> GetAddressZipCodeAsync(AddressDTO addressDTO)
         {
+            string zipCode = addressDTO.ZipCode;
+            int number = addressDTO.Number;
+            string complement = addressDTO.Complement;
+
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://viacep.com.br/");
@@ -120,11 +144,13 @@ namespace CarAPI.Address.Controllers
                 {
                     var stringResult = await response.Content.ReadAsStringAsync();
                     var address = JsonConvert.DeserializeObject<Models.Address>(stringResult);
+                    address.Complement = complement;
+                    address.Number = number; 
                     return address;
                 }
                 else
                 {
-                    return NotFound("Erro ao obter endereço do serviço ViaCEP");
+                    return NotFound("Erro ao obter endereço do serviço via CEP");
 
                 }
             }

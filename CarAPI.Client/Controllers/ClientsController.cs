@@ -10,7 +10,7 @@ namespace CarAPI.Client.Controllers
     [ApiController]
     public class ClientsController : ControllerBase
     {
-        private readonly CarAPIClientContext _context; 
+        private readonly CarAPIClientContext _context;
         private readonly AddressesController _addressController;
 
         public ClientsController(CarAPIClientContext context, AddressesController addressContext)
@@ -27,7 +27,8 @@ namespace CarAPI.Client.Controllers
             {
                 return NotFound();
             }
-            return await _context.Client.Include(e => e.Address).ToListAsync();
+            return await _context.Client.Include(_addressController => _addressController.Address).ToListAsync();
+               // e => e.Address).ToListAsync();
         }
 
         // GET: api/Clients/5
@@ -79,35 +80,6 @@ namespace CarAPI.Client.Controllers
             return NoContent();
         }
 
-        // POST: api/Clients
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<Models.Client>> PostClient(Models.Client client)
-        //{
-        //    if (_context.Client == null)
-        //    {
-        //        return Problem("Entity set 'CarAPIClientContext.Client'  is null.");
-        //    }
-        //    _context.Client.Add(client);
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateException)
-        //    {
-        //        if (ClientExists(client.Document))
-        //        {
-        //            return Conflict();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return CreatedAtAction("GetClient", new { id = client.Document }, client);
-        //}
-
         [HttpPost]
         public async Task<ActionResult<Models.Client>> PostCliente(Models.Client client)
         {
@@ -115,35 +87,38 @@ namespace CarAPI.Client.Controllers
             {
                 return Problem("Entity set 'ProjAndreVeiculosAPIClienteContext.Cliente' is null.");
             }
-            var addressResult = await _addressController.GetAddressZipCodeAsync(client.Address.ZipCode);
+            else
+            {
+                Models.Address address = new Models.Address { ZipCode = client.Address.ZipCode, Complement = client.Address.Complement, Number = client.Address.Number };
 
-            if (addressResult == null)
-            {
-                return BadRequest("CEP invalido");
-            }
-            client.Address.State = addressResult.Value.State;
-            client.Address.City = addressResult.Value.City;
-            client.Address.Neighborhood = addressResult.Value.Neighborhood;
-            client.Address.Street = addressResult.Value.Street;
-           
-
-            _context.Client.Add(client);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ClientExists(client.Document))
+                var addressResult = await _addressController.PostAddress(address); 
+                client.Address = addressResult;
+                client.Address.Id = addressResult.Id;
+                if (addressResult == null)
                 {
-                    return Conflict();
+                    return BadRequest("CEP invalido");
                 }
                 else
                 {
-                    throw;
+                    _context.Client.Add(client);
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException)
+                    {
+                        if (ClientExists(client.Document))
+                        {
+                            return Conflict();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return CreatedAtAction("GetCliente", new { id = client.Document }, client);
                 }
             }
-            return CreatedAtAction("GetCliente", new { id = client.Document }, client);
         }
 
         // DELETE: api/Clients/5

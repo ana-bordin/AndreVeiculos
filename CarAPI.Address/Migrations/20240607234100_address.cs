@@ -14,7 +14,7 @@ namespace CarAPI.Address.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeStreet = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    //TypeStreet = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ZipCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Neighborhood = table.Column<string>(type: "nvarchar(max)", nullable: false),
