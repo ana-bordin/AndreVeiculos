@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CarAPI.Address.Data;
 using Newtonsoft.Json;
 using Models.DTO;
+using CarAPI.Address.Services;
 
 namespace CarAPI.Address.Controllers
 {
@@ -11,21 +12,31 @@ namespace CarAPI.Address.Controllers
     public class AddressesController : ControllerBase
     {
         private readonly CarAPIAddressContext _context;
+        private AddressService _addressService;
 
         public AddressesController(CarAPIAddressContext context)
         {
             _context = context;
+            _addressService = new AddressService();
         }
 
         // GET: api/Addresses
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Models.Address>>> GetAddress()
+        [HttpGet("{tipoTecnologia}")]
+        public async Task<ActionResult<IEnumerable<Models.Address>>> GetAddress(string tipoTecnologia)
         {
             if (_context.Address == null)
             {
                 return NotFound();
             }
-            return await _context.Address.ToListAsync();
+
+            if (tipoTecnologia == "ef")
+            {
+                return await _context.Address.ToListAsync();
+            }
+            else /*(tipoTecnologia == "dapper")*/
+            {
+                return _addressService.GetAll();
+            }   
         }
 
         // GET: api/Addresses/5
@@ -38,7 +49,7 @@ namespace CarAPI.Address.Controllers
         //    }
 
         //    var address = await _context.Address.FindAsync(id);
-            
+
         //    return address;
         //}
 
@@ -99,7 +110,7 @@ namespace CarAPI.Address.Controllers
                     NotFound("Erro ao obter endereço do serviço via CEP");
                     return null;
                 }
-            } 
+            }
             CreatedAtAction("GetAddress", new { id = address.Id }, address);
             return address;
         }
@@ -145,7 +156,7 @@ namespace CarAPI.Address.Controllers
                     var stringResult = await response.Content.ReadAsStringAsync();
                     var address = JsonConvert.DeserializeObject<Models.Address>(stringResult);
                     address.Complement = complement;
-                    address.Number = number; 
+                    address.Number = number;
                     return address;
                 }
                 else
