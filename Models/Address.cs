@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
     public class Address
     {
-        public int Id { get; set; }
-
+        [Key]
+        public int Id;
         public string TypeStreet { get; set; }
 
         [JsonProperty("logradouro")]
@@ -29,7 +30,7 @@ namespace Models
 
         public override string ToString()
         {
-            return $"Street: {TypeStreet} {Street}, Number: {Number}, Complement: {Complement}, Neighborhood: {Neighborhood}, City: {City}, State: {State}, ZipCode: {ZipCode}";
+            return $"Street: {Street}, Number: {Number}, Complement: {Complement}, Neighborhood: {Neighborhood}, City: {City}, State: {State}, ZipCode: {ZipCode}";
         }
     }
 }

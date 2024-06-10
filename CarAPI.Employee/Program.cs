@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using CarAPI.Address.Data;
 using CarAPI.Employee.Data;
 namespace CarAPI.Employee
 {
@@ -8,8 +8,15 @@ namespace CarAPI.Employee
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
             builder.Services.AddDbContext<CarAPIEmployeeContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("CarAPIEmployeeContext") ?? throw new InvalidOperationException("Connection string 'CarAPIEmployeeContext' not found.")));
+           options.UseSqlServer(builder.Configuration.GetConnectionString("CarAPIEmployeeContext") ?? throw new InvalidOperationException("Connection string 'CarAPIEmployeeContext' not found.")));
+
+            builder.Services.AddDbContext<CarAPIAddressContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("CarAPIAddressContext") ?? throw new InvalidOperationException("Connection string 'CarAPIAddressContext' not found.")));
+
+            //builder.Services.AddDbContext<CarAPIEmployeeContext>(options =>
+            //    options.UseSqlServer(builder.Configuration.GetConnectionString("CarAPIEmployeeContext") ?? throw new InvalidOperationException("Connection string 'CarAPIEmployeeContext' not found.")));
 
             // Add services to the container.
 

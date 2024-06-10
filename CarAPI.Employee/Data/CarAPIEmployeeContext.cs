@@ -21,6 +21,7 @@ namespace CarAPI.Employee.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Models.Person>().HasKey(p => p.Document); 
+            modelBuilder.Entity<Models.Address>().HasKey(p => p.Id);
             modelBuilder.Entity<Models.Employee>().ToTable("Employee");
         }
     }
