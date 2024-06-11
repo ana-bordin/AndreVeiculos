@@ -1,10 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
     public class Address
     {
+        [BsonIgnore]
+        [BsonRepresentation(BsonType.ObjectId)]
         [Key]
         public int Id;
         public string TypeStreet { get; set; }

@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using CarAPI.Address.Data;
+using CarAPI.Address.Services;
+using CarAPI.Address.Utils;
+using Microsoft.Extensions.Options;
 namespace CarAPI.Address
 {
     public class Program
@@ -19,9 +22,19 @@ namespace CarAPI.Address
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            
+            /////////////
+            builder.Services.AddControllers();
 
+            builder.Services.Configure<ProjMongoDBAPIDataBaseSettings>(
+                           builder.Configuration.GetSection(nameof(ProjMongoDBAPIDataBaseSettings)));
+
+            builder.Services.AddSingleton<IProjMongoDBAPIDataBaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<ProjMongoDBAPIDataBaseSettings>>().Value);
+
+            builder.Services.AddSingleton<AddressService>();
             var app = builder.Build();
-
+            //////////////
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

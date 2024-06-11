@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using CarAPI.Client.Data;
 using Models;
 using CarAPI.Address.Controllers;
+using CarAPI.Address.Services;
+using CarAPI.Client.Services;
 
 namespace CarAPI.Client.Controllers
 {
@@ -12,11 +14,13 @@ namespace CarAPI.Client.Controllers
     {
         private readonly CarAPIClientContext _context;
         private readonly AddressesController _addressController;
+        private readonly ClientService _clientService;
 
-        public ClientsController(CarAPIClientContext context, AddressesController addressContext)
+        public ClientsController(CarAPIClientContext context, AddressesController addressContext, ClientService clientService)
         {
             _context = context;
             _addressController = addressContext;
+            _clientService = clientService;
         }
 
         // GET: api/Clients
@@ -100,6 +104,7 @@ namespace CarAPI.Client.Controllers
                 }
                 else
                 {
+                    var c = _clientService.Create(client);
                     _context.Client.Add(client);
                     try
                     {

@@ -2,6 +2,10 @@
 using CarAPI.Client.Data;
 using CarAPI.Address.Controllers;
 using CarAPI.Address.Data;
+using CarAPI.Address.Services;
+using CarAPI.Address.Utils;
+using Microsoft.Extensions.Options;
+using CarAPI.Client.Services;
 namespace CarAPI.Client
 {
     public class Program
@@ -22,11 +26,21 @@ namespace CarAPI.Client
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             //builder.Services.AddControllers();
+            builder.Services.AddControllers();
+
+            builder.Services.Configure<ProjMongoDBAPIDataBaseSettings>(
+                           builder.Configuration.GetSection(nameof(ProjMongoDBAPIDataBaseSettings)));
+
+            builder.Services.AddSingleton<IProjMongoDBAPIDataBaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<ProjMongoDBAPIDataBaseSettings>>().Value);
+
+            builder.Services.AddSingleton<ClientService>();
+            //builder.Services.AddSingleton<AddressService>();
 
             builder.Services.AddControllersWithViews();
             var app = builder.Build();
@@ -41,7 +55,7 @@ namespace CarAPI.Client
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-            
+
             app.MapControllers();
 
             app.Run();

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CarAPI.Address.Data;
 using Newtonsoft.Json;
 using Models.DTO;
+using CarAPI.Address.Services;
 
 namespace CarAPI.Address.Controllers
 {
@@ -11,10 +12,12 @@ namespace CarAPI.Address.Controllers
     public class AddressesController : ControllerBase
     {
         private readonly CarAPIAddressContext _context;
+        private readonly AddressService _addressService;
 
-        public AddressesController(CarAPIAddressContext context)
+        public AddressesController(CarAPIAddressContext context, AddressService addressService)
         {
             _context = context;
+            _addressService = addressService;
         }
 
         // GET: api/Addresses
@@ -22,28 +25,25 @@ namespace CarAPI.Address.Controllers
         public async Task<ActionResult<IEnumerable<Models.Address>>> GetAddress()
         {
             if (_context.Address == null)
+                return NotFound();
+            return await _context.Address.ToListAsync();           
+        }
+
+        //GET: api/Addresses/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Models.Address>> GetAddress(int id)
+        {
+            if (_context.Address == null)
             {
                 return NotFound();
             }
-            return await _context.Address.ToListAsync();
+
+            var address = await _context.Address.FindAsync(id);
+
+            return address;
         }
 
-        // GET: api/Addresses/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Models.Address>> GetAddress(int id)
-        //{
-        //    if (_context.Address == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var address = await _context.Address.FindAsync(id);
-            
-        //    return address;
-        //}
-
         // PUT: api/Addresses/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAddress(int id, Models.Address address)
         {
@@ -91,16 +91,15 @@ namespace CarAPI.Address.Controllers
                     address.TypeStreet = "";
                     address.Complement = newAddress.Complement;
                     address.Number = newAddress.Number;
-                    //_context.Address.Add(address);
-                    //_context.SaveChanges();
                 }
                 else
                 {
                     NotFound("Erro ao obter endereço do serviço via CEP");
                     return null;
                 }
-            } 
+            }
             CreatedAtAction("GetAddress", new { id = address.Id }, address);
+            _addressService.Create(address);
             return address;
         }
 
@@ -145,7 +144,7 @@ namespace CarAPI.Address.Controllers
                     var stringResult = await response.Content.ReadAsStringAsync();
                     var address = JsonConvert.DeserializeObject<Models.Address>(stringResult);
                     address.Complement = complement;
-                    address.Number = number; 
+                    address.Number = number;
                     return address;
                 }
                 else
